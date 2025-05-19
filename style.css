@@ -1,0 +1,125 @@
+* {
+  margin: 0px;
+  padding: 0px;
+  box-sizing: border-box;
+}
+
+.totdo_container {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex-direction: column;
+  background: linear-gradient(135deg, rgb(59, 81, 193), rgb(120, 53, 127));
+}
+h1{
+    font-size: 30px;
+    color: azure;
+    margin-top: 100px;
+    margin-bottom: 20px;
+}
+.totdo_container .todo_list {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  width: 500px;
+  /* height: 700px; */
+  flex-direction: column;
+}
+.totdo_container .todo_list form {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  width: 100%;
+}
+.totdo_container .todo_list form #todo_input {
+  width: 100%;
+  padding: 10px;
+  border-radius: 33px;
+  border: 1px solid azure;
+  outline: none;
+  background: transparent;
+  color: azure;
+  font-size: 20px;
+}
+.totdo_container .todo_list form #add {
+  position: absolute;
+  width: 100px;
+  height: 100%;
+  padding: 7px;
+  background: linear-gradient(135deg, rgb(110, 0, 122), rgb(2, 34, 193));
+  right: 0px;
+  border: none;
+  border-radius: 33px;
+  color: azure;
+  font-size: 20px;
+  cursor: pointer;
+  transition: background 0.3s ease-in-out;
+}
+.totdo_container .todo_list form #add:hover {
+  background: linear-gradient(135deg, rgb(59, 81, 193), rgb(120, 53, 127));
+}
+#todo {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+#todo_text {
+  padding: 12px 50px;
+  width: 100%;
+  background: none;
+  border: 2px solid azure;
+  border-radius: 33px;
+  color: azure;
+  caret-color: #00ffc4;
+  outline: none;
+  margin: 10px auto;
+}
+.delete_button {
+  position: absolute;
+  right: 10px;
+  padding: 3px;
+  background: none;
+  border: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+#delete_button svg {
+  transition: 0.2s ease;
+}
+#delete_button:hover svg {
+  fill: #ff0033;
+}
+.custom_checkbox{
+    position: absolute;
+    min-width: 20px;
+    min-height: 20px;
+    border-radius: 50%;
+    left: 10px;
+    border: 2px solid #ff0033;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
+    cursor: pointer;
+    transition: .2s ease;
+}
+input[type="checkbox"]:checked ~ .custom_checkbox{
+    background-color: #ff0033;
+}
+input[type="checkbox"]:checked ~ .custom_checkbox svg{
+    fill: azure;
+}
+input[type="checkbox"]:checked ~ #todo_text{
+    text-decoration: line-through;
+    color: rgb(148, 158, 158);
+}
+input[type="checkbox"]{
+    display: none;
+}
