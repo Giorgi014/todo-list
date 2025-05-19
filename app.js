@@ -2,6 +2,18 @@ const FORM = document.querySelector("form");
 const TODO_INPUT = document.getElementById("todo_input");
 const TODO_LIST = document.getElementById("todo");
 
+
+const getTodoApi = async () => {
+    const res = await fetch("https://jsonplaceholder.typicode.com/todos");
+
+    // return await res.json();
+    console.log(await res.json());
+    
+}
+
+getTodoApi();
+
+
 FORM.addEventListener("submit", (e) => {
   e.preventDefault();
   todoAdd();
