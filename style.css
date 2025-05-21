@@ -62,12 +62,15 @@ h1{
 .totdo_container .todo_list form #add:hover {
   background: linear-gradient(135deg, rgb(59, 81, 193), rgb(120, 53, 127));
 }
-#todo {
+.totdo_container .todo_list #todo {
   position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  width: 100%;
+}
+.todo{
   width: 100%;
 }
 #todo_text {

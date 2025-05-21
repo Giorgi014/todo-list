@@ -2,6 +2,9 @@ const FORM = document.querySelector("form");
 const TODO_INPUT = document.getElementById("todo_input");
 const TODO_LIST = document.getElementById("todo");
 
+
+let allTodos = [];
+
 const getTodoApi = async () => {
   const res = await fetch("https://jsonplaceholder.typicode.com/todos");
 
@@ -18,8 +21,9 @@ const renderTodo = (apiTodoList) => {
   const storageTodos = getTodos();
 
   allTodos = [...storageTodos, ...apiTodoList].map((item) => ({
+    id: item.id,
     title: item.title,
-    // completed: item.completed,
+    completed: item.completed,
   }));
 
   // apiTodoList.forEach((listTodo) => {
@@ -31,15 +35,41 @@ const renderTodo = (apiTodoList) => {
   //   allTodos.unshift(objectTodo);
   // });
   // saveTodos();
-  updateTodoList();
+  // console.log(allTodos);
+  
+  updateTodoList(allTodos);
 };
+
+const debonce = (cd, delay = 1000) => {
+  return (...args) => {
+    setTimeout(() => {
+      cd(...args)
+    }, delay)
+  }
+}
+const updateDebonce = debonce((text) => {
+ const filter = allTodos.filter(todo => todo.title.toLowerCase().includes(text));
+ updateTodoList(filter)
+})
+
+TODO_INPUT.addEventListener("input", (e) => {
+  const inputValue = e.target.value.toLowerCase()
+
+  if(inputValue === '') {
+    renderHtml()
+    return
+  }
+  // updateTodoList(allTodos.filter(todo => todo.title.toLowerCase().includes(inputValue)))
+  updateDebonce(inputValue)
+})
 
 FORM.addEventListener("submit", (e) => {
   e.preventDefault();
   // todoAdd();
   saveTodos({
+    id: self.crypto.randomUUID(),
     title: TODO_INPUT.value.trim(),
-    completed: false
+    completed: false,
   });
 
   // updateTodoList();
@@ -54,18 +84,18 @@ FORM.addEventListener("submit", (e) => {
 //       completed: false,
 //     };
 //     allTodos.push(objectTodo);
-//     TODO_INPUT.value = "";
+    // TODO_INPUT.value = "";
 //   }
 // };
-const updateTodoList = () => {
+const updateTodoList = (updatedTodos) => {
   TODO_LIST.innerHTML = "";
-  allTodos.forEach((todo, todoIndex) => {
-    todoItem = creatTodoItem(todo, todoIndex);
+  updatedTodos.forEach((todo, todoIndex) => {
+    todoItem = creatTodoItem(todo, todoIndex, todo.id);
     TODO_LIST.append(todoItem);
   });
 };
-const creatTodoItem = (todo, todoIndex) => {
-  const todoID = "todo_" + todoIndex;
+const creatTodoItem = (todo, todoIndex, todoId) => {
+  const todoID = "todo_" + todoId ?? todoIndex;
   const todoDiv = document.createElement("div");
   // const todoText = todo.text;
   const todoText = todo.title;
@@ -86,7 +116,9 @@ const creatTodoItem = (todo, todoIndex) => {
                   `;
   const deleteButton = todoDiv.querySelector(".delete_button");
   deleteButton.addEventListener("click", () => {
-    deleteTodoItem(todoIndex);
+    console.log("in", todoId);
+    
+    deleteTodoItem(todoId);
   });
   const checkbox = todoDiv.querySelector("input");
 
@@ -97,16 +129,31 @@ const creatTodoItem = (todo, todoIndex) => {
   checkbox.checked = todo.completed;
   return todoDiv;
 };
-const deleteTodoItem = (todoIndex) => {
-  allTodos = allTodos.filter((_, i) => i !== todoIndex);
-  saveTodos();
-  updateTodoList();
+const deleteTodoItem = (todoId) => {
+  const localeTodos = getTodos();
+  const updatedTodos = localeTodos.filter(todo => todo.id !== todoId)
+  // allTodos = allTodos.filter((_, i) => i !== todoIndex);
+  // saveTodos(updatedTodos);
+  localStorage.setItem("todos", JSON.stringify(updatedTodos));
+  renderHtml()
+  // updateTodoList();
 };
 
 const saveTodos = (newTodo) => {
-  const storageTodos = getTodos()
-  const todosJson = JSON.stringify([newTodo, ...storageTodos]);
-  localStorage.setItem("todos", todosJson);
+  // const storageTodos = getTodos()
+  // const todosJson = JSON.stringify([newTodo, ...storageTodos]);
+  // localStorage.setItem("todos", todosJson);
+
+  // renderHtml();
+  let saveTodos = [];
+
+  if (newTodo) {
+    saveTodos = [newTodo, ...getTodos()];
+  } else {
+    saveTodos = allTodos;
+  }
+
+  localStorage.setItem("todos", JSON.stringify(saveTodos));
 
   renderHtml();
 };
@@ -115,8 +162,8 @@ const getTodos = () => {
   const todos = localStorage.getItem("todos") || "[]";
   return JSON.parse(todos);
 };
-let allTodos = [];
-updateTodoList();
+
+// updateTodoList();
 
 const renderHtml = async () => {
   try {
@@ -127,4 +174,6 @@ const renderHtml = async () => {
   }
 };
 
+
+// todoAdd();
 renderHtml();
